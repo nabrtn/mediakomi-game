@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#012D6E">
+  <title>Медиакоми — угадай цену квартиры в Коми</title>
+  <meta name="description" content="Игра Медиакоми: угадывайте цены квартир из объявлений Республики Коми и узнайте, жадный вы студент, адекватный квартирант или транжира.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__brand"><span class="topbar__logo">МК</span>Медиакоми</div>
+    <div class="topbar__meta" id="topbarMeta"></div>
+  </header>
+  <div class="progress" aria-hidden="true">
+    <div class="progress__fill" id="progressFill"></div>
+  </div>
+
+  <main class="wrap">
+
+    <!-- ЭКРАН 1: СТАРТ -->
+    <section id="screen-start" class="screen">
+      <div class="hero">
+        <div class="hero__badge">Игра · Недвижимость Республики Коми</div>
+        <h1 class="hero__title">Медиакоми</h1>
+        <p class="hero__subtitle">Угадай, сколько стоит квартира в Инте. Спойлер: дешевле, чем ты думаешь.</p>
+        <button class="btn btn--primary btn--big" id="btnStart">Запустить игру</button>
+      </div>
+
+      <div class="rules">
+        <h2 class="rules__title">Как играть</h2>
+        <ol class="rules__list">
+          <li><b>10 раундов.</b> В каждом раунде — фото реальной квартиры из активного объявления.</li>
+          <li><b>Листай галерею</b> и внимательно осмотрись: площадь, этаж и район уже указаны.</li>
+          <li><b>Двигай бегунок</b> и ставь свою цену, затем нажимай «Оценить».</li>
+          <li><b>Получай баллы</b> за точность: чем ближе твоя цена к реальной, тем больше баллов (до 10 за раунд, максимум — 100).</li>
+          <li><b>Узнай вердикт:</b> жадный студент, адекватный квартирант или транжира.</li>
+        </ol>
+        <div class="rules__hint">
+          <span class="chip chip--blue">≤ 5% цены = 10 баллов</span>
+          <span class="chip">≤ 10% = 8 баллов</span>
+          <span class="chip">≤ 20% = 6 баллов</span>
+          <span class="chip">≤ 35% = 4 балла</span>
+          <span class="chip">≤ 60% = 2 балла</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 2: РАУНД -->
+    <section id="screen-game" class="screen screen--hidden">
+      <div class="card">
+        <div class="gallery" id="gallery">
+          <div class="gallery__track" id="galleryTrack"></div>
+          <button class="gallery__nav gallery__nav--prev" id="galleryPrev" aria-label="Предыдущее фото">&#8249;</button>
+          <button class="gallery__nav gallery__nav--next" id="galleryNext" aria-label="Следующее фото">&#8250;</button>
+          <div class="gallery__dots" id="galleryDots"></div>
+        </div>
+
+        <div class="card__body">
+          <div class="card__tags">
+            <span class="tag tag--street" id="lotStreet"></span>
+          </div>
+          <h2 class="card__desc" id="lotDesc"></h2>
+
+          <!-- Блок ставки -->
+          <div id="guessBlock">
+            <div class="guess__label">Сколько стоит эта квартира?</div>
+            <div class="guess__value" id="guessValue">0 ₽</div>
+            <input type="range" class="slider" id="priceSlider"
+                   min="50000" max="2000000" step="5000" value="400000"
+                   aria-label="Ваша оценка цены">
+            <div class="slider__scale">
+              <span>50 тыс. ₽</span>
+              <span>2 млн ₽</span>
+            </div>
+            <button class="btn btn--primary btn--big" id="btnSubmit">Оценить</button>
+          </div>
+
+          <!-- Блок результата раунда -->
+          <div id="resultBlock" class="result screen--hidden">
+            <div class="result__points" id="roundPoints">+10 баллов</div>
+            <div class="result__grid">
+              <div class="result__row">
+                <span class="result__key">Ваша цена</span>
+                <span class="result__val" id="resGuess"></span>
+              </div>
+              <div class="result__row result__row--real">
+                <span class="result__key">Реальная цена</span>
+                <span class="result__val" id="resReal"></span>
+              </div>
+              <div class="result__row">
+                <span class="result__key">Разница</span>
+                <span class="result__val" id="resDiff"></span>
+              </div>
+            </div>
+            <div class="result__comment" id="resComment"></div>
+            <a class="btn btn--ghost" id="resLink" target="_blank" rel="noopener">Смотреть объявление на Авито&nbsp;↗</a>
+            <button class="btn btn--primary btn--big" id="btnNext">Следующая квартира</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 3: ИТОГИ -->
+    <section id="screen-final" class="screen screen--hidden">
+      <div class="final">
+        <div class="final__emoji" id="finalEmoji">🏠</div>
+        <div class="final__verdict" id="finalVerdict">Адекватный квартирант</div>
+        <div class="final__score">
+          <span id="finalScore">0</span><span class="final__score-max">/ 100 баллов</span>
+        </div>
+        <p class="final__text" id="finalText"></p>
+        <p class="final__sub" id="finalSub"></p>
+
+        <div class="final__table" id="finalTable"></div>
+
+        <button class="btn btn--primary btn--big" id="btnRestart">Играть снова</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Медиакоми · данные: активные объявления Avito · Республика Коми, Инта
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
